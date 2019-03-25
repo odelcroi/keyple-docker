@@ -5,17 +5,15 @@ FROM openjdk:8-jdk
 # Create a non-root user
 #RUN useradd -m user
 #USER user
-#WORKDIR /home/user
+
+WORKDIR /opt/
 
 # Set up environment variables
-ENV USER_NAME="user"
+ENV USER_NAME="jenkins"
 ENV HOME="/home/${USER_NAME}"
-ENV ANDROID_HOME="${HOME}/android-sdk-linux"
+ENV ANDROID_HOME="/opt/android-sdk-linux"
 ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip"
-ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-all.zip"
-
-RUN mkdir -p ${HOME}
-WORKDIR $HOME
+ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
 
 # Download Android SDK
 RUN mkdir "$ANDROID_HOME" .android \
@@ -26,13 +24,15 @@ RUN mkdir "$ANDROID_HOME" .android \
  && yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
 # Install Gradle
-RUN wget $GRADLE_URL -O gradle.zip \
+RUN mkdir /opt/gradle /opt/gradle/.gradle \
+ && cd /opt/gradle \
+ && wget $GRADLE_URL -O gradle.zip \
  && unzip gradle.zip \
- && mv gradle-4.5.1 gradle \
- && rm gradle.zip \
- && mkdir .gradle
+ && rm gradle.zip
 
-ENV PATH="${HOME}/gradle/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${PATH}"
+ENV GRADLE_HOME=/opt/gradle/gradle-4.5.1
+
+ENV PATH="${GRADLE_HOME}/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${PATH}"
 
 #USER root
 
@@ -47,13 +47,9 @@ RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ### end
 
-RUN chmod u+x $HOME/gradle/bin/gradle
-#RUN chmod u+x $HOME/gradle/bin/gradle && \
-# chgrp 0 $HOME/.gradle && \
-# chmod g=u $HOME/.gradle
-
-RUN chgrp 0 -R $HOME && \
- chmod g=u -R $HOME
+RUN chmod u+x $GRADLE_HOME/bin/gradle && \
+ chgrp 0 $GRADLE_HOME && \
+ chmod g=u $GRADLE_HOME
 
 RUN git clone https://github.com/eclipse/keyple-java.git \
   && cd keyple-java \
