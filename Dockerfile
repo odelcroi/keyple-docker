@@ -22,9 +22,7 @@ RUN mkdir "$ANDROID_HOME" .android \
 
 ### give rights to android_home folder
 RUN chgrp -R 0 "$ANDROID_HOME" \
- && chmod -R g=u "$ANDROID_HOME"
-
-
+ && chmod -R g+w O "$ANDROID_HOME"
 
 #
 # Install Gradle
