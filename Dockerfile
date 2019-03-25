@@ -1,10 +1,5 @@
-#tag eclipsekeyple/build:1
 #FROM maven:3.6-jdk-8
 FROM openjdk:8-jdk
-
-# Create a non-root user
-#RUN useradd -m user
-#USER user
 
 WORKDIR /opt/
 
