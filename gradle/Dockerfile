@@ -1,34 +1,51 @@
-#eclipsekeyple/build:gradle
+#eclipsekeyple/build:gradle2
 FROM openjdk:8-jdk
 
 WORKDIR /opt/
 
+
+
+
 # Set up environment variables
 ENV USER_NAME="jenkins"
 ENV HOME="/home/${USER_NAME}"
-
 RUN whoami
-RUN mkdir $HOME
+
 
 #
 # Install Gradle
 #
-ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
-ENV GRADLE_USER_HOME=/opt/gradle
+#tgradle3
+#ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
+#ENV GRADLE_USER_HOME=/opt/gradle
+#
+#RUN mkdir $GRADLE_USER_HOME \
+# && cd /opt/gradle \
+# && wget $GRADLE_URL -O gradle.zip \
+# && unzip gradle.zip \
+# && rm gradle.zip
+#
+#ENV GRADLE_HOME=$GRADLE_USER_HOME/gradle-4.5.1
+#
+#RUN chmod u+x $GRADLE_HOME/bin/gradle && \
+# chgrp -R 0  $GRADLE_USER_HOME && \
+# chmod -R g=u $GRADLE_USER_HOME && \
+# chmod -R g+w $GRADLE_USER_HOME
 
-RUN mkdir $GRADLE_USER_HOME \
+#gradle2
+ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
+ENV GRADLE_HOME=/opt/gradle/gradle-4.5.1
+
+RUN mkdir /opt/gradle .gradle \
  && cd /opt/gradle \
  && wget $GRADLE_URL -O gradle.zip \
  && unzip gradle.zip \
  && rm gradle.zip
 
-ENV GRADLE_HOME=/opt/gradle/gradle-4.5.1
-
 RUN chmod u+x $GRADLE_HOME/bin/gradle && \
- chgrp -R 0 $GRADLE_HOME $GRADLE_USER_HOME && \
- chmod -R g=u $GRADLE_HOME $GRADLE_USER_HOME && \
- chmod -R g+w $GRADLE_HOME $GRADLE_USER_HOME
-
+ chgrp -R 0 $GRADLE_HOME && \
+ chmod -R g=u $GRADLE_HOME && \
+ chmod -R g+w $GRADLE_HOME
 
 #
 # Configure PATH
@@ -45,8 +62,9 @@ RUN chmod u+x /usr/local/bin/uid_entrypoint && \
 #
 # Pre-Download dependencies
 #
-
-RUN cd $HOME \
+ENV TMP_PROJECT="/tmp/project"
+RUN mkdir $TMP_PROJECT
+RUN cd $TMP_PROJECT \
   && git clone https://github.com/eclipse/keyple-java.git \
   && cd keyple-java \
   && gradle wrapper --gradle-version 4.5.1 -i \

@@ -1,5 +1,5 @@
 #eclipsekeyple/build:android
-FROM eclipsekeyple/build:gradle
+FROM eclipsekeyple/build:gradle2
 
 WORKDIR /opt/
 
@@ -35,7 +35,7 @@ ENV PATH="${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${PATH}"
 COPY docker_scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
+    chmod @g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ### end
 
 ENTRYPOINT [ "/usr/local/bin/uid_entrypoint" ]
