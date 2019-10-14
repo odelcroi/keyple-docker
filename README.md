@@ -12,3 +12,28 @@ last tag : android2
 use android container
 allows to publish to sonatype
 last tag : pgp2
+
+
+# Docker commands
+
+in ./eclipse/ folder
+
+```
+ docker build -t eclipsekeyple/build:pgp2 -f ./pgp/Dockerfile .
+```
+
+```
+docker run eclipsekeyple/build:pgp2 -it /bin/bash
+```
+
+
+to push an image to eclipsekeyple/build dockerhub repo, you need to sign in with 
+
+```
+docker login
+```
+then you can push a tagged image
+```
+docker push eclipsekeyple/build:pgp2
+```
+
