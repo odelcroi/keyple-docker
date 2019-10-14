@@ -4,33 +4,11 @@ FROM openjdk:8-jdk
 WORKDIR /opt/
 
 
-
-
 # Set up environment variables
 ENV USER_NAME="jenkins"
 ENV HOME="/home/${USER_NAME}"
 RUN whoami
 
-
-#
-# Install Gradle
-#
-#tgradle3
-#ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
-#ENV GRADLE_USER_HOME=/opt/gradle
-#
-#RUN mkdir $GRADLE_USER_HOME \
-# && cd /opt/gradle \
-# && wget $GRADLE_URL -O gradle.zip \
-# && unzip gradle.zip \
-# && rm gradle.zip
-#
-#ENV GRADLE_HOME=$GRADLE_USER_HOME/gradle-4.5.1
-#
-#RUN chmod u+x $GRADLE_HOME/bin/gradle && \
-# chgrp -R 0  $GRADLE_USER_HOME && \
-# chmod -R g=u $GRADLE_USER_HOME && \
-# chmod -R g+w $GRADLE_USER_HOME
 
 #gradle2
 ENV GRADLE_URL="https://services.gradle.org/distributions/gradle-4.5.1-bin.zip"
